@@ -90,6 +90,10 @@ const App = () => {
     setPeople(data.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
   };
 
+  const refreshPage = () => {
+    window.location.reload();
+  };
+
   return (
     <div className='container'>
       <h2>CRUD App</h2>
@@ -132,6 +136,7 @@ const App = () => {
         ) : (
           <button type="button" class="btn btn-success" onClick={addPerson}>Dodaj</button>
         )}
+        <button type="button" class="btn btn-success" onClick={refreshPage}>Odśwież</button>
         <br />
         </div>
         <div className="hoverClass">
