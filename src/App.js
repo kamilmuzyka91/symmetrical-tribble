@@ -97,6 +97,9 @@ const App = () => {
   return (
     <div className='container'>
       <h2>CRUD App</h2>
+      <p>Aplikacja typu CRUD napisania w React.js z pomocą Firestore Database, która jest bazą danych typu NoSQL. Dane w bazie są trzymane w postaci dokumentów, które następnie łączymy w kolekcje. 
+
+      </p>
       <div>
       <div className="hoverClass">
         <label>
