@@ -102,7 +102,7 @@ const App = () => {
       
       Możemy dodać nowe osoby uzupełniając pola input i klikając w przycisk "dodaj", nowa osoba pojawi się na liście. 
       Edycja i usuwanie działa analogicznie. Wyszukiwanie osób w bazie danych może odbywać się po nazwisku lub miejscowości, która jest przypisana.
-      </p>
+      Za pomocą buttona "Odśwież" możemy przeładować stronę np po wyszukaniu danych.</p>
       <div>
       <div className="hoverClass">
         <label>
