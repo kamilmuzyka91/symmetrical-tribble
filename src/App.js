@@ -7,6 +7,10 @@ const App = () => {
   const [lastName, setLastName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [address, setAddress] = useState('');
+  const [searchLastName, setSearchLastName] = useState('');
+  const [searchAddress, setSearchAddress] = useState('');
+  const [editMode, setEditMode] = useState(false);
+  const [editPerson, setEditPerson] = useState(null);
 
   useEffect(() => {
     fetchData();
@@ -20,12 +24,23 @@ const App = () => {
 
   const addPerson = async () => {
     const db = firebase.firestore();
-    await db.collection('people').add({
-      firstName,
-      lastName,
-      phoneNumber,
-      address,
-    });
+    if (editMode) {
+      await db.collection('people').doc(editPerson.id).update({
+        firstName,
+        lastName,
+        phoneNumber,
+        address,
+      });
+      setEditMode(false);
+      setEditPerson(null);
+    } else {
+      await db.collection('people').add({
+        firstName,
+        lastName,
+        phoneNumber,
+        address,
+      });
+    }
     setFirstName('');
     setLastName('');
     setPhoneNumber('');
@@ -39,28 +54,29 @@ const App = () => {
     fetchData();
   };
 
-  const editPerson = async (id) => {
-    const db = firebase.firestore();
-    await db.collection('people').doc(id).update({
-      firstName,
-      lastName,
-      phoneNumber,
-      address,
-    });
-    setFirstName('');
-    setLastName('');
-    setPhoneNumber('');
-    setAddress('');
-    fetchData();
+  const editSelectedPerson = (person) => {
+    setEditMode(true);
+    setEditPerson(person);
+    setFirstName(person.firstName);
+    setLastName(person.lastName);
+    setPhoneNumber(person.phoneNumber);
+    setAddress(person.address);
   };
 
-  const searchPerson = async () => {
+  const searchPeople = async () => {
     const db = firebase.firestore();
-    const query = await db
-      .collection('people')
-      .where('lastName', '==', lastName)
-      .get();
-    setPeople(query.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
+    let query = db.collection('people');
+
+    if (searchLastName) {
+      query = query.where('lastName', '==', searchLastName);
+    }
+
+    if (searchAddress) {
+      query = query.where('address', '==', searchAddress);
+    }
+
+    const data = await query.get();
+    setPeople(data.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
   };
 
   return (
@@ -68,7 +84,7 @@ const App = () => {
       <h1>CRUD App</h1>
       <div>
         <label>
-          First Name:
+          Imię:
           <input
             type="text"
             value={firstName}
@@ -76,7 +92,7 @@ const App = () => {
           />
         </label>
         <label>
-          Last Name:
+          Nazwisko:
           <input
             type="text"
             value={lastName}
@@ -84,7 +100,7 @@ const App = () => {
           />
         </label>
         <label>
-          Phone Number:
+          Numer telefonu:
           <input
             type="text"
             value={phoneNumber}
@@ -92,22 +108,43 @@ const App = () => {
           />
         </label>
         <label>
-          Address:
+          Miasto:
           <input
             type="text"
             value={address}
             onChange={(e) => setAddress(e.target.value)}
           />
         </label>
-        <button onClick={addPerson}>Add Person</button>
-        <button onClick={searchPerson}>Search by Last Name</button>
+        {editMode ? (
+          <button onClick={addPerson}>Zapisz</button>
+        ) : (
+          <button type="button" class="btn btn-success" onClick={addPerson}>Dodaj</button>
+        )}
+        <label>
+          Wyszukaj po nazwisku:
+          <input
+            type="text"
+            value={searchLastName}
+            onChange={(e) => setSearchLastName(e.target.value)}
+          />
+        </label>
+        <label>
+          Wyszukaj po mieście:
+          <input
+            type="text"
+            value={searchAddress}
+            onChange={(e) => setSearchAddress(e.target.value)}
+          />
+        </label>
+        <button class="btn btn-primary" onClick={searchPeople}>Wyszukaj</button>
       </div>
       <ul>
         {people.map((person) => (
           <li key={person.id}>
-            {person.firstName} {person.lastName}, {person.phoneNumber}, {person.address}
-            <button onClick={() => deletePerson(person.id)}>Delete</button>
-            <button onClick={() => editPerson(person.id)}>Edit</button>
+            {person.firstName} {person.lastName} {person.phoneNumber} {person.address}
+            <button type="button" class="btn btn-info" onClick={() => editSelectedPerson(person)}>Edytuj</button>
+            <button type="button" class="btn btn-danger" onClick={() => deletePerson(person.id)}>Usuń</button>
+        
           </li>
         ))}
       </ul>
