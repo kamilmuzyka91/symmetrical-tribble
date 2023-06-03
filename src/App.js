@@ -98,7 +98,10 @@ const App = () => {
     <div className='container'>
       <h2>CRUD App</h2>
       <p>Aplikacja typu CRUD napisania w React.js z pomocą Firestore Database, która jest bazą danych typu NoSQL. Dane w bazie są trzymane w postaci dokumentów, które następnie łączymy w kolekcje. 
-
+      Po wejściu na stronę jest widoczna aktualna lista dodanych osób w bazie danych. 
+      
+      Możemy dodać nowe osoby uzupełniając pola input i klikając w przycisk "dodaj", nowa osoba pojawi się na liście. 
+      Edycja i usuwanie działa analogicznie. Wyszukiwanie osób w bazie danych może odbywać się po nazwisku lub miejscowości, która jest przypisana.
       </p>
       <div>
       <div className="hoverClass">
