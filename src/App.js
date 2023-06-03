@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import firebase from './firebase';
 
 const App = () => {
+
+   // zdefiniowanie stanu aplikacji, danych na których będziemy pracowali
   const [people, setPeople] = useState([]);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -12,6 +14,7 @@ const App = () => {
   const [editMode, setEditMode] = useState(false);
   const [editPerson, setEditPerson] = useState(null);
 
+  // Wywołanie funkcji fetchData przy pierwszym renderowaniu komponentu
   useEffect(() => {
     fetchData();
   }, []);
@@ -19,11 +22,13 @@ const App = () => {
   const fetchData = async () => {
     const db = firebase.firestore();
     const data = await db.collection('people').get();
+    // Aktualizacja stanu people za pomocą otrzymanych danych
     setPeople(data.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
   };
 
   const addPerson = async () => {
     const db = firebase.firestore();
+     // Tryb edycji do aktualizacji danych 
     if (editMode) {
       await db.collection('people').doc(editPerson.id).update({
         firstName,
@@ -34,6 +39,7 @@ const App = () => {
       setEditMode(false);
       setEditPerson(null);
     } else {
+       // Dodanie nowej osoby do bazy danych
       await db.collection('people').add({
         firstName,
         lastName,
@@ -41,6 +47,7 @@ const App = () => {
         address,
       });
     }
+    // Wyczyszczenie pól po dodaniu lub edycji osoby i aktualizacja danych metodą fetchData()
     setFirstName('');
     setLastName('');
     setPhoneNumber('');
@@ -50,11 +57,13 @@ const App = () => {
 
   const deletePerson = async (id) => {
     const db = firebase.firestore();
+    // Usunięcie osoby z bazy danych - funkcja asynchroniczna i aktualizacja danych metodą fetchData()
     await db.collection('people').doc(id).delete();
     fetchData();
   };
 
   const editSelectedPerson = (person) => {
+    // Ustawienie trybu edycji i edycja danych
     setEditMode(true);
     setEditPerson(person);
     setFirstName(person.firstName);
@@ -67,6 +76,8 @@ const App = () => {
     const db = firebase.firestore();
     let query = db.collection('people');
 
+    // warunkowe wyszukiwanie na podstawie wybranego pola input
+
     if (searchLastName) {
       query = query.where('lastName', '==', searchLastName);
     }
@@ -74,7 +85,7 @@ const App = () => {
     if (searchAddress) {
       query = query.where('address', '==', searchAddress);
     }
-
+    // Aktualizacja stanu people zwrócona z wyszukiwania
     const data = await query.get();
     setPeople(data.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
   };
