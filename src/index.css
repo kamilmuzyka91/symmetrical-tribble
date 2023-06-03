@@ -5,6 +5,43 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: rgb(226, 226, 226);
+}
+
+
+.container {
+   display: flex;
+   flex-direction: column;
+}
+
+h2{
+  text-align: center;
+  margin: 50px 50px;
+}
+
+.data {
+  padding: 15px 15px;
+}
+
+input {
+  width: 150px;
+  height: 30px;
+}
+
+button {
+  margin: 15px 10px;
+}
+
+ul {
+  list-style: none;
+}
+
+li:hover {
+  background-color: yellow;
+}
+
+.hoverClass:hover {
+  background-color: yellow;
 }
 
 code {

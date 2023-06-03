@@ -15,7 +15,7 @@ const App = () => {
   useEffect(() => {
     fetchData();
   }, []);
-
+  
   const fetchData = async () => {
     const db = firebase.firestore();
     const data = await db.collection('people').get();
@@ -80,11 +80,12 @@ const App = () => {
   };
 
   return (
-    <div>
-      <h1>CRUD App</h1>
+    <div className='container'>
+      <h2>CRUD App</h2>
       <div>
+      <div className="hoverClass">
         <label>
-          Imię:
+         <span className='data'>Imię:</span> 
           <input
             type="text"
             value={firstName}
@@ -92,7 +93,7 @@ const App = () => {
           />
         </label>
         <label>
-          Nazwisko:
+        <span className='data'>Nazwisko:</span> 
           <input
             type="text"
             value={lastName}
@@ -100,7 +101,7 @@ const App = () => {
           />
         </label>
         <label>
-          Numer telefonu:
+        <span className='data'>Numer telefonu:</span> 
           <input
             type="text"
             value={phoneNumber}
@@ -108,7 +109,7 @@ const App = () => {
           />
         </label>
         <label>
-          Miasto:
+        <span className='data'>Miasto:</span> 
           <input
             type="text"
             value={address}
@@ -120,8 +121,11 @@ const App = () => {
         ) : (
           <button type="button" class="btn btn-success" onClick={addPerson}>Dodaj</button>
         )}
+        <br />
+        </div>
+        <div className="hoverClass">
         <label>
-          Wyszukaj po nazwisku:
+        <span className='data'>Wyszukaj po nazwisku:</span> 
           <input
             type="text"
             value={searchLastName}
@@ -129,7 +133,7 @@ const App = () => {
           />
         </label>
         <label>
-          Wyszukaj po mieście:
+        <span className='data'>Wyszukaj po mieście:</span> 
           <input
             type="text"
             value={searchAddress}
@@ -137,10 +141,12 @@ const App = () => {
           />
         </label>
         <button class="btn btn-primary" onClick={searchPeople}>Wyszukaj</button>
+        </div>
       </div>
-      <ul>
+      <br />
+      <ul className='list-group'>
         {people.map((person) => (
-          <li key={person.id}>
+          <li className='list-group-item' key={person.id}>
             {person.firstName} {person.lastName} {person.phoneNumber} {person.address}
             <button type="button" class="btn btn-info" onClick={() => editSelectedPerson(person)}>Edytuj</button>
             <button type="button" class="btn btn-danger" onClick={() => deletePerson(person.id)}>Usuń</button>
